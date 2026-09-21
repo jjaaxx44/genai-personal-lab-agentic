@@ -1,0 +1,53 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-atlas-local:8.3.11
+    # Pin the hostname: without it, recreating the service orphans the persisted
+    # replica-set config and the container crash-loops on restart.
+    hostname: mongodb
+    restart: unless-stopped
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: ${MONGODB_USERNAME}
+      MONGODB_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
+    # 27018 on the host, not 27017: the sibling RAG lab's MongoDB already holds
+    # 27017, and both labs are meant to run at the same time. Inside the compose
+    # network this is still 27017, which is what MONGODB_URI points at.
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+      - mongodb_mongot:/data/mongot
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    # 8503 on the host: the RAG lab holds 8501 and 8502 was taken too. The container
+    # still serves on 8501, so the healthcheck below is unchanged.
+    ports:
+      - "8503:8501"
+    # Ollama runs on the host, so LOCAL_OLLAMA_BASE_URL points at host.docker.internal.
+    # Docker Desktop provides that name already; this makes it resolve everywhere else too.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./data:/app/data
+      - hf_cache:/root/.cache/huggingface
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+  mongodb_mongot:
+  hf_cache:

@@ -1,0 +1,69 @@
+[theme]
+font = "Inter"
+headingFont = "JetBrains Mono"
+codeFont = "JetBrains Mono"
+baseFontSize = 15
+# Square housing, not cards. See DESIGN.md -- the RAG lab uses "small"; this app
+# is grounded in instrument panels, where nothing is rounded.
+baseRadius = "none"
+showWidgetBorder = true
+showSidebarBorder = true
+
+[[theme.fontFaces]]
+family = "Inter"
+url = "app/static/fonts/Inter-Variable.ttf"
+weight = "100 900"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "Inter"
+url = "app/static/fonts/Inter-Italic-Variable.ttf"
+weight = "100 900"
+style = "italic"
+
+[[theme.fontFaces]]
+family = "JetBrains Mono"
+url = "app/static/fonts/JetBrainsMono-Variable.ttf"
+weight = "100 900"
+style = "normal"
+
+[[theme.fontFaces]]
+family = "JetBrains Mono"
+url = "app/static/fonts/JetBrainsMono-Italic-Variable.ttf"
+weight = "100 900"
+style = "italic"
+
+[theme.light]
+primaryColor = "#4B3FC7"
+backgroundColor = "#F5F6F8"
+secondaryBackgroundColor = "#E9EBF0"
+textColor = "#14161B"
+linkColor = "#443AB8"
+borderColor = "#D2D6DF"
+orangeColor = "#8A5A00"
+redColor = "#B22F2A"
+chartCategoricalColors = ["#4B3FC7", "#9A6400", "#1E8A78", "#1E7FB8", "#6F4A2E"]
+chartSequentialColors = ["#C2B4E1", "#AF9CDC", "#9D84D8", "#8B6AD7", "#7850D6", "#622FD7", "#4C1DBA", "#391292", "#270A6A", "#170442"]
+
+[theme.dark]
+primaryColor = "#8E82F5"
+backgroundColor = "#141519"
+secondaryBackgroundColor = "#1D1F26"
+textColor = "#E7E9EE"
+linkColor = "#8E82F5"
+borderColor = "#2E323B"
+orangeColor = "#E0A94A"
+redColor = "#E4736B"
+chartCategoricalColors = ["#8E82F5", "#C9992F", "#6FD0BC", "#57B6DE", "#B58763"]
+chartSequentialColors = ["#291657", "#3E237E", "#5431A4", "#6A44C3", "#8061C8", "#957DCE", "#A996D5", "#BFB1DE", "#D4CCE7", "#EAE6F3"]
+
+[theme.dark.sidebar]
+backgroundColor = "#0E0F12"
+
+[server]
+enableStaticServing = true
+# App code isn't bind-mounted into the container (only ./data and the HF cache
+# are), so hot-reload-on-save can never do anything here -- a code change always
+# needs a rebuild regardless. The watcher's module-path scan is also what floods
+# the logs when transformers is installed. Disabling it costs nothing in this setup.
+fileWatcherType = "none"
