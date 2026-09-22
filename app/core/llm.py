@@ -148,6 +148,26 @@ def get_chat_model(fast: bool = False) -> BaseChatModel:
 
 
 @st.cache_resource(show_spinner=False)
+def agent_models(fast: bool = False) -> list[BaseChatModel]:
+    """The configured providers, in PROVIDER_ORDER, as themselves rather than wrapped
+    into one `.with_fallbacks(...)` runnable.
+
+    `create_agent` and `StateGraph` need a real `BaseChatModel` as their primary model
+    -- `bind_tools()` is called on it directly, and `RunnableWithFallbacks` (what
+    `get_chat_model()` returns) does not forward that method, so passing it in fails.
+    A demo built on either unpacks this instead:
+
+        primary, *rest = agent_models()
+        agent = create_agent(primary, tools, middleware=[ModelFallbackMiddleware(*rest)])
+
+    `ModelFallbackMiddleware` re-tries the remaining models in order on a failed call,
+    which is the same fallback `.with_fallbacks()` gives `get_chat_model()` -- just
+    supplied the way `create_agent` expects it, rather than pre-wrapped.
+    """
+    return _configured_models(fast)
+
+
+@st.cache_resource(show_spinner=False)
 def get_plain_chat_model(fast: bool = False) -> BaseChatModel:
     """The first configured provider with no fallback wrapper, for callers that need a
     plain BaseChatModel they can introspect or mutate (Ragas does exactly that)."""

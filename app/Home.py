@@ -146,7 +146,20 @@ FAMILIES: dict[str, tuple[str, list[str]]] = {
 
 # Filled in one entry at a time, as each demo lands. A tile for a demo that has no
 # page yet says so quietly rather than 404ing.
-BUILT_PAGES: dict[str, st.Page] = {}
+BUILT_PAGES: dict[str, st.Page] = {
+    "01": st.Page(
+        "demos/agents/react/page.py",
+        title="01 ReAct",
+        url_path="react",
+        icon=":material/sync:",
+    ),
+    "02": st.Page(
+        "demos/agents/tool_design/page.py",
+        title="02 Tool design",
+        url_path="tool_design",
+        icon=":material/construction:",
+    ),
+}
 
 # Temporary: Step 0's checks live here, and it goes when the demos that replace
 # its checks are built. Not in DEMOS, not in the catalogue.

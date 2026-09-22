@@ -25,6 +25,7 @@ UI work: `DESIGN.md` holds this app's design tokens and page patterns. Method co
 9. **Teaching value first.** Each page shows the graph, the trajectory, the budget spent, and every decision the agent made with the reason it gave. Code that hides the technique is a defect.
    Every README follows one fixed structure, in this order: `What it is` (the technique in general — how it works and why, never this repo's implementation), `Control flow` and `State and memory` (one mermaid diagram each; `st.markdown` renders mermaid fences natively, and so does GitHub), `Strengths`, `Limitations` (inherent trade-offs *and* the ways it fails, merged — not a separate failure-modes section), `Where to use it`, and a closing `In this demo` holding every implementation specific: libraries, collection names, env vars, caps, caveats.
 10. **Soft failure.** Rate limits, a paused database, a missing optional key and a tool that throws all give a clear UI message — never a stack trace, never a crash on startup. A tool error is fed back to the agent as an observation, because recovering from one is part of what these demos teach.
+11. **Nothing is committed without approval.** Finish the work, leave it in the working tree, say what changed. `git commit`, `git push`, a tag or a PR happen only when a human asks for that specific change — approval for one does not carry to the next. The review against a step's "done when" list comes before the work becomes history, not after.
 
 ## How to work
 
