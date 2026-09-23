@@ -63,6 +63,10 @@ class Settings(BaseSettings):
     # Demo-specific caps (one per demo as it lands)
     reflexion_max_attempts: int = 3
     plan_execute_max_plan_steps: int = 6
+    # A replan costs one model call per executed step (execute + replan), plus the
+    # plan and respond calls, so this demo's own step budget starts higher than the
+    # shared agent_max_steps default -- see Step 3's implementation brief.
+    plan_execute_max_steps: int = 20
     supervisor_max_hops: int = 8
     swarm_max_handoffs: int = 6
     subagent_max_steps: int = 6
