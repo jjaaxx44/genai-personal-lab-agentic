@@ -165,6 +165,12 @@ BUILT_PAGES: dict[str, st.Page] = {
         url_path="plan_execute",
         icon=":material/checklist:",
     ),
+    "04": st.Page(
+        "demos/agents/reflexion/page.py",
+        title="04 Reflexion",
+        url_path="reflexion",
+        icon=":material/replay:",
+    ),
 }
 
 # Temporary: Step 0's checks live here, and it goes when the demos that replace
