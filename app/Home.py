@@ -177,6 +177,18 @@ BUILT_PAGES: dict[str, st.Page] = {
         url_path="memory",
         icon=":material/history:",
     ),
+    "06": st.Page(
+        "demos/agents/hitl/page.py",
+        title="06 Human-in-the-loop gates",
+        url_path="hitl",
+        icon=":material/pan_tool:",
+    ),
+    "07": st.Page(
+        "demos/agents/escalation/page.py",
+        title="07 Escalation and handoff",
+        url_path="escalation",
+        icon=":material/support_agent:",
+    ),
 }
 
 # Temporary: Step 0's checks live here, and it goes when the demos that replace

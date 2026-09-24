@@ -29,4 +29,4 @@ UI work: `DESIGN.md` holds this app's design tokens and page patterns. Method co
 
 ## How to work
 
-One step from the plan per session, in order. Implement it, then stop so a human can check it against that step's "done when" list. If a step turns out to be wrong or impossible, say so and propose the change instead of working around it — and once agreed, update `AGENTIC_IMPLEMENTATION_PLAN.md` in the same session, since every later step reads from it.
+One step from the plan per session, in order, by default. Implement it, then stop so a human can check it against that step's "done when" list. If the user explicitly asks for several steps together, confirm the exact steps first, then implement them in order in one session, checking each against its own "done when" list, and stop once the last one is done. If a step turns out to be wrong or impossible, say so and propose the change instead of working around it — and once agreed, update `AGENTIC_IMPLEMENTATION_PLAN.md` in the same session, since every later step reads from it.

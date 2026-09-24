@@ -72,6 +72,9 @@ class Settings(BaseSettings):
     subagent_max_steps: int = 6
     memory_recall_k: int = 5
     memory_window_messages: int = 6
+    hitl_gated_tools: str = "write_file"  # comma-separated tool names, gated by default
+    escalation_confidence_threshold: float = 0.7
+    escalation_max_tool_errors: int = 2
     autonomous_max_objectives: int = 8
     research_max_subquestions: int = 4
     eval_task_set_size: int = 8

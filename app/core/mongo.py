@@ -145,12 +145,20 @@ def vector_search(
 
 
 def save_run(run: AgentRun) -> None:
-    """Stores a finished run in its own demo's collection. Never raises into the page:
-    a run that completed is worth showing even if the record could not be written."""
+    """Stores or updates a run in its own demo's collection. Never raises into the page:
+    a run that completed is worth showing even if the record could not be written.
+
+    An upsert, not an insert: a demo that pauses (HITL, escalation) saves the same
+    run_id twice -- once with status="needs_human" when it stops for a person, again
+    when resume() finishes it -- and the second save must replace the first rather than
+    fail on a duplicate key.
+    """
     if not run.demo:
         raise ValueError("AgentRun.demo must be set before the run can be stored.")
     try:
-        runs_collection(run.demo).insert_one({"_id": run.run_id, **run.model_dump()})
+        runs_collection(run.demo).replace_one(
+            {"_id": run.run_id}, {"_id": run.run_id, **run.model_dump()}, upsert=True
+        )
     except PyMongoError:
         pass
 

@@ -52,8 +52,12 @@ class Budget(BaseModel):
     # is not part of the run record the page renders.
     _started_at: float | None = PrivateAttr(default=None)
 
-    def start(self) -> "Budget":
-        self._started_at = time.monotonic()
+    def start(self, elapsed_s: float = 0.0) -> "Budget":
+        """Starts (or resumes) the clock. `elapsed_s` is the agent time already spent on
+        an earlier leg of this run -- passed by a demo that pauses (HITL, escalation)
+        when it resumes from a checkpoint, so the wait for a person's decision is never
+        counted against the deadline. Every other caller leaves it at 0.0."""
+        self._started_at = time.monotonic() - elapsed_s
         return self
 
     @property
