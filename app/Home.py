@@ -171,6 +171,12 @@ BUILT_PAGES: dict[str, st.Page] = {
         url_path="reflexion",
         icon=":material/replay:",
     ),
+    "05": st.Page(
+        "demos/agents/memory/page.py",
+        title="05 Agent memory",
+        url_path="memory",
+        icon=":material/history:",
+    ),
 }
 
 # Temporary: Step 0's checks live here, and it goes when the demos that replace

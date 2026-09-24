@@ -71,6 +71,7 @@ class Settings(BaseSettings):
     swarm_max_handoffs: int = 6
     subagent_max_steps: int = 6
     memory_recall_k: int = 5
+    memory_window_messages: int = 6
     autonomous_max_objectives: int = 8
     research_max_subquestions: int = 4
     eval_task_set_size: int = 8
