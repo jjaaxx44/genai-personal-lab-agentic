@@ -201,6 +201,12 @@ BUILT_PAGES: dict[str, st.Page] = {
         url_path="supervisor",
         icon=":material/account_tree:",
     ),
+    "10": st.Page(
+        "demos/agents/swarm/page.py",
+        title="10 Swarm",
+        url_path="swarm",
+        icon=":material/hub:",
+    ),
 }
 
 # Temporary: Step 0's checks live here, and it goes when the demos that replace
