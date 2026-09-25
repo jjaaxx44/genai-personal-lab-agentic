@@ -78,6 +78,24 @@ class Settings(BaseSettings):
     autonomous_max_objectives: int = 8
     research_max_subquestions: int = 4
     eval_task_set_size: int = 8
+    # Step 11
+    a2a_remote_max_steps: int = 6
+    # Step 12
+    deep_agent_max_subagents: int = 4
+    deep_agent_max_steps: int = 30
+    # The deepagents harness sends a long system prompt and every tool schema on each
+    # call (~5k tokens before any work), so the shared token default runs out early.
+    deep_agent_max_tokens: int = 150_000
+    # Step 13
+    autonomous_max_steps: int = 30
+    autonomous_dup_threshold: float = 0.9
+    # Step 14
+    research_max_steps: int = 30
+    research_max_steps_per_question: int = 6
+    # Fan-out is token-hungry: every sub-question re-sends its own growing history.
+    research_max_tokens: int = 60_000
+    # Step 15
+    sql_analyst_max_sql_retries: int = 1
 
     def budget_defaults(self) -> BudgetDefaults:
         return BudgetDefaults(

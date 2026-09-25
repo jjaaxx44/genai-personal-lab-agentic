@@ -37,6 +37,8 @@ dependencies = [
   "ddgs==9.16.0",
   "ragas==0.4.3",
   "langfuse==4.15.4",
+  "a2a-sdk[http-server]==1.1.5",
+  "deepagents==0.7.15",
 ]
 
 # CPU-only torch. PyPI's Linux torch wheels pull in several GB of NVIDIA CUDA packages.

@@ -68,7 +68,7 @@ DEMOS: dict[str, tuple[str, str, str]] = {
     ),
     "11": (
         "Agent-to-agent (A2A)",
-        "Two agents that share no memory cooperate over the protocol: card, task, status, artefact.",
+        "Agents that share no memory cooperate over the protocol: cards, tasks, status, artefacts.",
         "discover → task → status ↻ → artefact",
     ),
     "12": (
@@ -206,6 +206,36 @@ BUILT_PAGES: dict[str, st.Page] = {
         title="10 Swarm",
         url_path="swarm",
         icon=":material/hub:",
+    ),
+    "11": st.Page(
+        "demos/agents/a2a/page.py",
+        title="11 Agent-to-agent (A2A)",
+        url_path="a2a",
+        icon=":material/swap_horiz:",
+    ),
+    "12": st.Page(
+        "demos/agents/deep_agent/page.py",
+        title="12 Deep agents",
+        url_path="deep_agent",
+        icon=":material/folder_open:",
+    ),
+    "13": st.Page(
+        "demos/agents/autonomous/page.py",
+        title="13 Autonomous goal loop",
+        url_path="autonomous",
+        icon=":material/all_inclusive:",
+    ),
+    "14": st.Page(
+        "demos/agents/research/page.py",
+        title="14 Deep research",
+        url_path="research",
+        icon=":material/travel_explore:",
+    ),
+    "15": st.Page(
+        "demos/agents/sql_analyst/page.py",
+        title="15 Text-to-SQL analyst",
+        url_path="sql_analyst",
+        icon=":material/table_chart:",
     ),
 }
 

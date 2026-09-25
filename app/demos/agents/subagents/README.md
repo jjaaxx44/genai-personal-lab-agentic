@@ -154,7 +154,8 @@ between them instead of leaving the choice to a single tool call.
   before any LLM call -- a deterministic way to exercise the recovery path
   without depending on model behaviour to reproduce it.
 - **Budget:** the sub-agent's own cap is `subagent_max_steps` (default 6,
-  `SUBAGENT_MAX_STEPS` in config); its token and deadline caps are whatever the
+  `SUBAGENT_MAX_STEPS` in config, overridable per run from the sidebar's
+  "Sub-agent step cap" slider); its token and deadline caps are whatever the
   parent has left when it's called. Its real spend (tokens, tool calls, LLM
   calls -- never steps) is charged onto the parent's `Budget`, so the strip
   always shows true total cost.

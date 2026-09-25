@@ -156,6 +156,25 @@ def sidebar_budget_controls(demo: str, defaults: Budget) -> Budget:
     return Budget(max_steps=max_steps, max_tokens=max_tokens, deadline_s=deadline_s)
 
 
+def sidebar_subagent_step_cap(demo: str, default: int) -> int:
+    """Per-run override for a launched sub-agent's own step cap -- separate from
+    the parent's budget above, because a sub-agent launch is a nested run with
+    its own cap (rule 3), not a share of the parent's. Used by every demo that
+    launches sub-agents with their own bounded turn: deep_agent and subagents."""
+    return st.sidebar.slider(
+        "Sub-agent step cap",
+        1,
+        max(default * 3, 12),
+        default,
+        key=f"{demo}_subagent_max_steps",
+        help=(
+            "Steps a single delegated launch gets before it stops on its own cap and "
+            "reports back what it had. Configured by SUBAGENT_MAX_STEPS; this slider "
+            "overrides it for this run only."
+        ),
+    )
+
+
 # --- trajectory track ----------------------------------------------------------
 
 

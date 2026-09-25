@@ -25,6 +25,7 @@ from core.ui import (
     provider_note,
     readme_and_trace_tabs,
     sidebar_budget_controls,
+    sidebar_subagent_step_cap,
     task_row,
     trajectory_track,
 )
@@ -70,13 +71,15 @@ if isolated:
             "a failed delegation instead of the run crashing."
         ),
     )
+    subagent_max_steps = sidebar_subagent_step_cap(DEMO, settings.subagent_max_steps)
 else:
     force_failure = False
+    subagent_max_steps = settings.subagent_max_steps
     st.sidebar.caption("Hidden in shared-context mode -- there's no delegated call to fail.")
 
 st.sidebar.caption(
-    f"Sub-agent step cap: {settings.subagent_max_steps}. Tools ({', '.join(TOOL_NAMES)}) are "
-    "the same set the parent already has -- delegating trades context, not capability."
+    f"Tools ({', '.join(TOOL_NAMES)}) are the same set the parent already has -- "
+    "delegating trades context, not capability."
 )
 
 if clear_data_button(DEMO):
@@ -122,7 +125,14 @@ if task:
             status.write(f"{marker} **{step.tool}**" if step.tool else marker)
 
         try:
-            result = agent.run(task, run_budget, on_step=on_step, isolated=isolated, force_failure=force_failure)
+            result = agent.run(
+                task,
+                run_budget,
+                on_step=on_step,
+                isolated=isolated,
+                force_failure=force_failure,
+                subagent_max_steps=subagent_max_steps,
+            )
         except Exception as exc:  # nothing below core is allowed to reach the reader
             status.update(label="The run failed.", state="error")
             st.error(f"The run could not finish: {type(exc).__name__}: {exc}")

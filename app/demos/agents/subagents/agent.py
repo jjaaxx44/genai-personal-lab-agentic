@@ -193,6 +193,7 @@ def _run_subagent(
     parent_budget: Budget,
     run_id: str,
     force_failure: bool,
+    subagent_max_steps: int,
     emit: Callable[..., Step],
 ) -> str:
     """Runs one bounded, isolated sub-agent turn and returns only its final reply.
@@ -205,11 +206,10 @@ def _run_subagent(
     renders indented under the handoff -- but only the string this returns ever
     reaches the parent's own `messages`.
     """
-    settings_obj = get_settings()
     remaining_tokens = max(parent_budget.max_tokens - parent_budget.tokens_used, 1)
     remaining_deadline = max(parent_budget.deadline_s - parent_budget.elapsed_s, 1.0)
     sub_budget = Budget(
-        max_steps=0 if force_failure else settings_obj.subagent_max_steps,
+        max_steps=0 if force_failure else subagent_max_steps,
         max_tokens=remaining_tokens,
         deadline_s=remaining_deadline,
     ).start()
@@ -303,10 +303,13 @@ def run(task: str, budget: Budget, **settings: Any) -> AgentRun:
     parent doing everything itself in one shared context; `force_failure`
     (default False) -- clamps the sub-agent's own step cap to zero so the first
     delegated call fails deterministically, to show the parent recovering from
-    it."""
+    it; `subagent_max_steps` (default from config) -- the step cap a launched
+    sub-agent gets before it stops on its own cap, overridable from the UI."""
     on_step: Callable[[str, Step], None] | None = settings.get("on_step")
     isolated = bool(settings.get("isolated", True))
     force_failure = bool(settings.get("force_failure", False))
+    raw_cap = settings.get("subagent_max_steps")
+    subagent_max_steps = int(raw_cap) if raw_cap is not None else get_settings().subagent_max_steps
 
     run_id = new_run_id()
     agent_run = AgentRun(run_id=run_id, demo=DEMO, task=task)
@@ -393,6 +396,7 @@ def run(task: str, budget: Budget, **settings: Any) -> AgentRun:
                         budget,
                         run_id,
                         force_failure,
+                        subagent_max_steps,
                         emit,
                     )
                     tool_messages.append(ToolMessage(content=summary, tool_call_id=call["id"]))
