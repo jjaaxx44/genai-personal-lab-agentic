@@ -189,6 +189,12 @@ BUILT_PAGES: dict[str, st.Page] = {
         url_path="escalation",
         icon=":material/support_agent:",
     ),
+    "08": st.Page(
+        "demos/agents/subagents/page.py",
+        title="08 Sub-agent delegation",
+        url_path="subagents",
+        icon=":material/call_split:",
+    ),
 }
 
 # Temporary: Step 0's checks live here, and it goes when the demos that replace

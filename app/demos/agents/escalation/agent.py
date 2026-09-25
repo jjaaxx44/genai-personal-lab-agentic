@@ -109,7 +109,9 @@ ACT_SYSTEM_PROMPT = (
     "part of the task is not covered by what the tools returned, say exactly what "
     "is missing rather than estimating or guessing at it. If a person has already "
     "answered part of an earlier escalation, use their answer together with the "
-    "tool results to complete the task."
+    "tool results to complete the task. Before every tool call, write one short "
+    "sentence in your reply saying what you are about to do and why, then call "
+    "the tool in the same turn."
 )
 
 JUDGE_SYSTEM_PROMPT = (

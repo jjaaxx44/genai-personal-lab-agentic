@@ -113,7 +113,9 @@ SYSTEM_PROMPT = (
     "reject it with a reason. When a call comes back rejected, read the reason and "
     "change your next proposal to address it -- do not repeat the same call "
     "unchanged. Once you have done what the task asks, answer in your own words "
-    "rather than calling another tool."
+    "rather than calling another tool. Before every tool call, write one short "
+    "sentence in your reply saying what you are about to do and why, then call "
+    "the tool in the same turn."
 )
 
 

@@ -127,7 +127,9 @@ EXECUTE_SYSTEM_PROMPT = (
     "You are the executor. You are given one step from a plan, the plan it belongs to, "
     "and what has already been done. Call exactly one tool to carry out the step named "
     "below. If the step needs no tool -- pure arithmetic or reasoning over what you "
-    "already know -- answer it directly in your reply text instead of calling a tool."
+    "already know -- answer it directly in your reply text instead of calling a tool. "
+    "Before calling a tool, write one short sentence in your reply saying what you are "
+    "about to do and why, then call the tool in the same turn."
 )
 
 REPLAN_SYSTEM_PROMPT = (

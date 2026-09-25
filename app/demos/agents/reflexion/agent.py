@@ -138,7 +138,9 @@ ACT_SYSTEM_PROMPT = (
     "verification -- a number, a name, a version, a date -- call exactly one tool to "
     "retrieve it before stating it; do not state a specific fact you have not just "
     "retrieved with a tool this attempt. If the task needs no tool -- pure reasoning "
-    "over what you already know -- answer it directly instead."
+    "over what you already know -- answer it directly instead. Before calling a "
+    "tool, write one short sentence in your reply saying what you are about to do "
+    "and why, then call the tool in the same turn."
 )
 
 ACT_NO_TOOLS_PROMPT = (
