@@ -42,9 +42,8 @@ settings = get_settings()
 provider_note()
 budget_template = sidebar_budget_controls(DEMO, settings.budget_defaults().to_budget())
 st.sidebar.caption(
-    f"Each remote's own step cap: {settings.a2a_remote_max_steps}. Every remote agent has "
-    "its own Budget, built from its own config -- never the client's -- and its spend is "
-    "shown but never charged to the client's budget above."
+    f"Each remote's own step cap: {settings.a2a_remote_max_steps}. Each remote has its own "
+    "budget; its spend is shown but not charged to the budget above."
 )
 
 st.sidebar.subheader("Remote agents")
@@ -54,9 +53,8 @@ offline_agents = st.sidebar.multiselect(
     format_func=lambda k: REMOTE_NAMES[k],
     key=f"{DEMO}_offline_agents",
     help=(
-        "Every request to these hosts fails at the transport layer, as if they were "
-        "down. Their cards are never read, so the coordinator doesn't know what they "
-        "could have done -- it has to route around them or say what it couldn't answer."
+        "These hosts act as if they were down. Their cards are never read, so the "
+        "coordinator must route around them or say what it couldn't answer."
     ),
 )
 failing_agent = st.sidebar.selectbox(
@@ -65,10 +63,8 @@ failing_agent = st.sidebar.selectbox(
     format_func=lambda k: "Nobody" if k is None else REMOTE_NAMES[k],
     key=f"{DEMO}_failing_agent",
     help=(
-        "That agent's executor raises after its first tool call. It catches its own "
-        "exception and publishes a failed status over the protocol rather than "
-        "crashing the connection -- so the reader sees a real failed task arrive, "
-        "and the coordinator still answers from the other agents."
+        "This agent fails after its first tool call and reports a failed task over "
+        "the protocol. The coordinator still answers from the others."
     ),
 )
 if failing_agent is not None and failing_agent in offline_agents:
@@ -82,13 +78,11 @@ if clear_data_button(DEMO):
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "The client (\"coordinator\") and three remote agents -- Corpus researcher, SQL "
-    "analyst, Web researcher -- share no memory and no Python objects. The coordinator "
-    "knows only their addresses; what each can do it learns from the card it fetches, "
-    "and everything that crosses between them is an A2A protocol message. Contrast with MCP, where an agent calls a *tool*, and with "
-    "Sub-agent delegation (Step 8), where a parent and its sub-agent share one "
-    "runtime and one process; here the two agents could be two different processes "
-    "on two different hosts, built by two different teams, and neither would know."
+    "The coordinator and three remote agents (Corpus researcher, SQL analyst, Web "
+    "researcher) share no memory. The coordinator knows only their addresses, learns "
+    "what each can do from its card, and talks to them only in A2A messages. Unlike "
+    "MCP (an agent calls a *tool*) or Sub-agent delegation (one shared process), these "
+    "agents could run on different hosts, built by different teams."
 )
 
 graph_slot = st.container()
@@ -210,4 +204,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

@@ -53,9 +53,8 @@ skip_schema = st.sidebar.toggle(
     "Skip the schema tool",
     key=f"{DEMO}_skip_schema",
     help=(
-        "Removes describe_schema from this run's tools, so a wrong column or table "
-        "name can only be learned from the SQL error SQLite returns, rather than "
-        "avoided by inspecting the schema first."
+        "Removes describe_schema from this run, so the model can only learn a wrong "
+        "column or table name from SQLite's error message."
     ),
 )
 
@@ -181,4 +180,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

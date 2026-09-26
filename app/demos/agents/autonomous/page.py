@@ -56,10 +56,9 @@ _defaults = Budget(
 )
 budget_template = sidebar_budget_controls(DEMO, _defaults)
 st.sidebar.caption(
-    f"Every model call spends one step: propose, act, critique -- three per "
-    f"objective. The demo's own cap, `autonomous_max_objectives` "
-    f"({settings.autonomous_max_objectives}), stops an open-ended goal on its own "
-    "objective count; lower the step cap above to see *that* cap named instead."
+    f"Each model call is one step, so three per objective. The objective cap, "
+    f"`autonomous_max_objectives` ({settings.autonomous_max_objectives}), stops an "
+    "open-ended goal; lower the step cap above to see *that* cap named instead."
 )
 
 st.sidebar.subheader("Settings")
@@ -67,8 +66,8 @@ allow_web_search = st.sidebar.toggle(
     "Allow web search",
     key=f"{DEMO}_web_search",
     help=(
-        "Off by default so the presets stay reproducible -- with web search on, "
-        "what the agent finds (and how much it spins looking) can change run to run."
+        "Off by default so presets are reproducible. With it on, results can "
+        "change run to run."
     ),
 )
 
@@ -139,12 +138,10 @@ with body_slot:
 
         st.subheader("Spin tally", anchor=False)
         st.caption(
-            "Repeated actions: the same tool called with the same arguments twice. "
-            "Near-duplicate objectives: cosine similarity above "
-            f"`autonomous_dup_threshold` ({settings.autonomous_dup_threshold}). "
-            "No-progress streak: consecutive critiques that found no advancement. "
-            "None of these stop the run -- the budget does; this is what the spin "
-            "looks like while it is still spending."
+            "Repeated actions: same tool, same arguments. Near-duplicate objectives: "
+            f"cosine similarity above `autonomous_dup_threshold` "
+            f"({settings.autonomous_dup_threshold}). No-progress streak: critiques in "
+            "a row that found no progress. None of these stop the run -- the budget does."
         )
         cols = st.columns(3)
         cols[0].metric("Repeated actions", len(repeat_pairs))
@@ -214,10 +211,8 @@ with body_slot:
         trajectory_track([])
         st.subheader("Spin tally", anchor=False)
         st.caption(
-            "Once a run finishes, this panel counts repeated tool calls, "
-            "near-duplicate objectives (by embedding similarity) and any streak of "
-            "critiques that found no progress -- the loop's own record of starting "
-            "to spin."
+            "After a run, this counts repeated tool calls, near-duplicate objectives "
+            "and streaks of no progress -- signs the loop is spinning."
         )
 
 
@@ -233,4 +228,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

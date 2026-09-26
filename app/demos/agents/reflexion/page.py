@@ -45,10 +45,10 @@ provider_note()
 
 budget_template = sidebar_budget_controls(DEMO, settings.budget_defaults().to_budget())
 st.sidebar.caption(
-    f"Every model call spends one step: the actor's tool decision, its compose call "
-    f"when a tool ran, the evaluator, and the reflector. Up to "
-    f"`reflexion_max_attempts` ({settings.reflexion_max_attempts}) attempts run before "
-    "an unresolved task gives up."
+    f"Every model call is one step: the actor's tool decision, its compose call "
+    f"when a tool ran, the evaluator, and the reflector. After "
+    f"`reflexion_max_attempts` ({settings.reflexion_max_attempts}) failed attempts "
+    "the run gives up."
 )
 
 st.sidebar.subheader("Settings")
@@ -56,9 +56,9 @@ force_memory_only = st.sidebar.toggle(
     "Force the first attempt to answer from memory",
     key=f"{DEMO}_force_memory",
     help=(
-        "No tools are bound on attempt 1, so it must answer from what the model "
-        "already knows. Pairs with the first preset: the evaluator can then fail an "
-        "ungrounded claim on attempt 1 and pass a grounded one on attempt 2."
+        "Attempt 1 gets no tools, so it answers from memory. With the first "
+        "preset, the evaluator fails that ungrounded answer and passes a "
+        "grounded one on attempt 2."
     ),
 )
 
@@ -154,4 +154,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

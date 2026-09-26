@@ -51,8 +51,8 @@ inject_malformed = st.sidebar.toggle(
     "Break the first reply",
     key=f"{DEMO}_fault",
     help=(
-        "Substitutes prose with no Action line for the model's first reply, so the "
-        "parser fails and the loop re-prompts. The model is not called for that step."
+        "Replaces the first reply with bad prose so you can watch the parser fail "
+        "and re-prompt. The model is not called for that step."
     ),
 )
 
@@ -123,9 +123,8 @@ with body_slot:
         st.subheader("The prompt", anchor=False)
         if not prompts:
             st.caption(
-                "The prompt appears here. It starts as the task plus the tools written "
-                "out as text, and grows by one Thought / Action / Observation block per "
-                "step — there is nothing else holding the agent's memory."
+                "The prompt appears here. It starts as the task and tool list, then "
+                "grows by one Thought / Action / Observation block per step."
             )
         else:
             which = st.select_slider(
@@ -133,7 +132,7 @@ with body_slot:
                 options=list(range(1, len(prompts) + 1)),
                 value=len(prompts),
                 key=f"{DEMO}_prompt_pick",
-                help="Every call sends the whole thing again. Slide back to watch it grow.",
+                help="Each call resends all of it. Slide back to watch it grow.",
             )
             shown = prompts[which - 1]
             st.caption(f"Call {which} of {len(prompts)} · {len(shown):,} characters")
@@ -154,8 +153,7 @@ def trace() -> None:
         st.caption("Nothing has run yet.")
         return
     st.caption(
-        "The model's replies exactly as they arrived, before parsing. Everything on the "
-        "track was read out of these by `parse_reply()`."
+        "The model's raw replies. `parse_reply()` built the track from these."
     )
     for i, reply in enumerate(replies, start=1):
         with st.expander(f"Reply {i} · {len(reply):,} characters"):
@@ -165,4 +163,4 @@ def trace() -> None:
         st.json(result.model_dump())
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

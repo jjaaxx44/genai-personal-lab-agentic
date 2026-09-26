@@ -47,16 +47,16 @@ inject_fault = st.sidebar.toggle(
     "Break the first tool call",
     key=f"{DEMO}_fault",
     help=(
-        "Diverts the first tool call on both sides to a tool that always raises, so the "
-        "error each toolset actually shows the model can be compared side by side."
+        "Sends the first tool call on both sides to a tool that always fails, so "
+        "you can compare the error each toolset shows the model."
     ),
 )
 crowd = st.sidebar.toggle(
     "Crowd both toolboxes",
     key=f"{DEMO}_crowd",
     help=(
-        "Adds six near-duplicate tools that do nothing to both toolsets, so what extra "
-        "tool count does to selection can be seen on its own."
+        "Adds six do-nothing look-alike tools to both sides, to show what extra "
+        "tools do to selection."
     ),
 )
 
@@ -163,8 +163,8 @@ if first is not None and revised is not None:
     with table_slot:
         st.subheader("Comparison", anchor=False)
         st.caption(
-            "Off-task = a call to a tool outside this task's expected set. Recoveries = an "
-            "error observation that was not the run's last step."
+            "Off-task = a call to a tool this task doesn't need. Recoveries = an error "
+            "that wasn't the run's last step."
         )
         st.dataframe(
             agent.comparison_rows(first, revised, expected), width="stretch", hide_index=True
@@ -188,4 +188,4 @@ def trace() -> None:
     st.caption(f"Both runs stored as separate records in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

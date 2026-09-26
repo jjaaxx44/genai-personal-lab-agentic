@@ -59,10 +59,9 @@ _defaults = Budget(
 )
 budget_template = sidebar_budget_controls(DEMO, _defaults)
 st.sidebar.caption(
-    f"Every model call spends one step here: decompose, each researcher turn "
-    f"(capped at {settings.research_max_steps_per_question} per sub-question), and "
-    "synthesise. A sub-question that spends its own cap moves on rather than "
-    "stopping the run -- only the step count above does that."
+    f"Each model call is one step: decompose, each researcher turn (max "
+    f"{settings.research_max_steps_per_question} per sub-question), and synthesise. "
+    "A sub-question that hits its cap moves on; only the step count above stops the run."
 )
 
 st.sidebar.subheader("Settings")
@@ -70,10 +69,8 @@ inject_fault = st.sidebar.toggle(
     "Break the first search",
     key=f"{DEMO}_fault",
     help=(
-        "Diverts the first search call in the run (search_corpus or web_search) to a tool that always "
-        "raises, so the researcher has a genuine search failure to recover from "
-        "-- rephrase, switch to search_corpus, or (if nothing works) say so "
-        "rather than guessing."
+        "Sends the first search (search_corpus or web_search) to a tool that always "
+        "fails, so you can watch the researcher rephrase, switch tool, or admit a gap."
     ),
 )
 
@@ -225,4 +222,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

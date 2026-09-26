@@ -56,7 +56,7 @@ gated_tools = st.sidebar.multiselect(
     list(TOOL_NAMES),
     default=default_gated,
     key=f"{DEMO}_gated_tools",
-    help="Every call to one of these tools stops the run until a person decides.",
+    help="Calls to these tools pause the run until a person decides.",
 )
 
 if clear_data_button(DEMO):
@@ -72,17 +72,17 @@ if RESULT not in st.session_state:
     if restored is not None:
         st.session_state[RESULT] = {"run": restored["run"], "budget": restored["budget"]}
         st.info(
-            f"Restored a run that was waiting for a decision (`{restored['run'].run_id}`) "
-            "-- it survived the refresh/restart."
+            f"Restored a paused run (`{restored['run'].run_id}`) -- it survived the "
+            "refresh/restart."
         )
 
 # --- page ----------------------------------------------------------------------
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Try a rejection on preset 1: *\"File it as supply-risks-2026Q3.md, and name who "
-    "owns each mitigation -- say 'unassigned' if the policy doesn't.\"* The agent's "
-    "next proposal should use the new name and the extra content, not repeat the call."
+    "On preset 1, reject with: *\"File it as supply-risks-2026Q3.md, and name who "
+    "owns each mitigation -- say 'unassigned' if the policy doesn't.\"* The next "
+    "proposal should use both changes, not repeat the call."
 )
 
 graph_slot = st.container()
@@ -148,8 +148,8 @@ with body_slot:
             payload = pending_now["payload"] if pending_now else None
             if payload is None:
                 st.warning(
-                    "This run says it's waiting for a decision, but the checkpoint no "
-                    "longer has one -- it may have been cleared."
+                    "This run is marked as waiting, but its checkpoint has no pending "
+                    "decision -- it may have been cleared."
                 )
             else:
                 call_id = payload.get("call_id")
@@ -208,4 +208,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`. Checkpoints live in `{DEMO}_checkpoints`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

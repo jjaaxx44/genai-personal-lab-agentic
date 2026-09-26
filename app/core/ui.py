@@ -11,6 +11,7 @@ means a sub-agent's step under the agent that delegated it. Retries stack under
 the step they replace with a primed index (`04`, `04′`).
 """
 
+import re
 from typing import Any, Callable
 
 import streamlit as st
@@ -310,20 +311,56 @@ def final_output(run: AgentRun) -> None:
     )
 
 
-def readme_and_trace_tabs(demo: str, readme_path: str, trace_renderer: Callable[[], None]) -> None:
+def _flow_lines(mermaid_source: str) -> list[str]:
+    """A diagram's edges and nodes, ignoring layout direction and whitespace."""
+    lines = [line.strip() for line in mermaid_source.strip().splitlines() if line.strip()]
+    if lines and re.match(r"(flowchart|graph)\s+(LR|RL|TD|TB|BT)$", lines[0]):
+        lines = lines[1:]
+    return lines
+
+
+def _drop_duplicate_control_flow(readme: str, graph: str) -> str:
+    """Swap the README's `Control flow` diagram for a pointer when it is the map above.
+
+    The README keeps its diagram -- it has to stand alone on GitHub -- but on the
+    page the same chart twice, one of them unhighlighted, is noise. A README whose
+    diagram differs from the map (a finer-grained view, say) is left alone.
+    """
+    match = re.search(r"(## Control flow\s*\n)```mermaid\n(.*?)```\n", readme, re.S)
+    if not match or _flow_lines(match.group(2)) != _flow_lines(graph):
+        return readme
+    pointer = "_The map at the top of the page is this demo's control flow; after a run it also shows the route taken._\n"
+    return readme[: match.start()] + match.group(1) + pointer + readme[match.end() :]
+
+
+def readme_and_trace_tabs(
+    demo: str, readme_path: str, trace_renderer: Callable[[], None], graph: str | None = None
+) -> None:
     """`How it works` first, `Trace` second — explain, then get out of the way.
 
     The page moves the reader to `Trace` the moment a run finishes by setting
     `st.session_state[f"{demo}_tabs"] = "Trace"` immediately after storing the
-    result, which is always above this call.
+    result, which is always above this call. Pass the page's `graph` so a README
+    diagram identical to the map is not drawn a second time.
     """
     how, trace = st.tabs(["How it works", "Trace"], key=f"{demo}_tabs", on_change="rerun")
     with how:
         try:
             with open(readme_path, encoding="utf-8") as handle:
-                st.markdown(handle.read())
+                readme = handle.read()
         except OSError:
             st.caption("This demo has no README yet.")
+        else:
+            if graph:
+                readme = _drop_duplicate_control_flow(readme, graph)
+            # `In this demo` is implementation detail -- libraries, collections, caps.
+            # It stays in the README for GitHub but is folded away on the page, so
+            # the technique reads first and the specifics are one click away.
+            technique, _, specifics = readme.partition("\n## In this demo")
+            st.markdown(technique)
+            if specifics.strip():
+                with st.expander("In this demo", expanded=False):
+                    st.markdown(specifics.strip())
     with trace:
         trace_renderer()
 

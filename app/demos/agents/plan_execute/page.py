@@ -53,11 +53,9 @@ _defaults = Budget(
 )
 budget_template = sidebar_budget_controls(DEMO, _defaults)
 st.sidebar.caption(
-    "Every model call spends one step here: the plan, each step's execution, each "
-    "replan check, and the final answer. A plan with one revision easily spends "
-    "8-12 — a much lower cap often stops the run before it reaches an answer, which "
-    "the step count in the run's footer (a row per *trajectory entry*, not per "
-    "step spent) won't obviously explain on its own."
+    "Every model call is one step: the plan, each executed step, each replan "
+    "check, and the answer. One revision easily spends 8-12, so a low cap often "
+    "stops the run early. The footer counts trajectory rows, not steps spent."
 )
 
 st.sidebar.subheader("Settings")
@@ -65,9 +63,8 @@ inject_fault = st.sidebar.toggle(
     "Break the first tool call",
     key=f"{DEMO}_fault",
     help=(
-        "Diverts the first tool call to a tool that always raises, so the "
-        "replanner has a genuine error to react to even when the task would "
-        "otherwise plan cleanly."
+        "Sends the first tool call to a tool that always fails, so the "
+        "replanner has a real error to react to."
     ),
 )
 
@@ -200,4 +197,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

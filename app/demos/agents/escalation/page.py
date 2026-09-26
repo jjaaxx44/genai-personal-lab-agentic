@@ -53,11 +53,11 @@ threshold = st.sidebar.slider(
     settings.escalation_confidence_threshold,
     step=0.05,
     key=f"{DEMO}_threshold",
-    help="The judge's confidence has to reach this before the draft is returned as the answer.",
+    help="The judge's confidence must reach this for the draft to be returned.",
 )
 st.sidebar.caption(
-    f"Also escalates after {settings.escalation_max_tool_errors} tool call(s) fail "
-    "in a row without recovering."
+    f"Also escalates after {settings.escalation_max_tool_errors} failed tool call(s) "
+    "in a row."
 )
 
 if clear_data_button(DEMO):
@@ -71,18 +71,17 @@ if RESULT not in st.session_state:
     if restored is not None:
         st.session_state[RESULT] = {"run": restored["run"], "budget": restored["budget"]}
         st.info(
-            f"Restored a run that was waiting for a decision (`{restored['run'].run_id}`) "
-            "-- it survived the refresh/restart."
+            f"Restored a paused run (`{restored['run'].run_id}`) -- it survived the "
+            "refresh/restart."
         )
 
 # --- page ----------------------------------------------------------------------
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Preset 1 has no lamp unit price anywhere in the corpus, so it should escalate. "
-    "Try answering with *\"£1,150 each, quoted by Kelbrook Scientific\"* -- the "
-    "resumed run should land on £23,000 and the two-quote approval tier, both "
-    "checkable against procurement-policy.md."
+    "Preset 1 should escalate: the corpus has no lamp unit price. Answer "
+    "*\"£1,150 each, quoted by Kelbrook Scientific\"* and the resumed run should "
+    "reach £23,000 and the two-quote tier (see procurement-policy.md)."
 )
 
 graph_slot = st.container()
@@ -190,8 +189,8 @@ with body_slot:
             payload = pending_now["payload"] if pending_now else None
             if payload is None:
                 st.warning(
-                    "This run says it's waiting for a decision, but the checkpoint no "
-                    "longer has one -- it may have been cleared."
+                    "This run is marked as waiting, but its checkpoint has no pending "
+                    "decision -- it may have been cleared."
                 )
             else:
                 decision = _handoff_panel(DEMO, payload)
@@ -238,4 +237,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`. Checkpoints live in `{DEMO}_checkpoints`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

@@ -49,24 +49,22 @@ settings = get_settings()
 provider_note()
 budget_template = sidebar_budget_controls(DEMO, settings.budget_defaults().to_budget())
 st.sidebar.caption(
-    f"Hop cap: {settings.supervisor_max_hops}. A hop costs at least two steps (the "
-    "supervisor's own decision plus one worker call), so with the defaults above "
-    "the shared step cap is usually reached first on a run that never finishes."
+    f"Hop cap: {settings.supervisor_max_hops}. A hop costs at least two steps "
+    "(supervisor + worker), so the step cap is usually hit first."
 )
 
 st.sidebar.subheader("Workers")
 st.sidebar.caption(f"researcher: {', '.join(RESEARCHER_TOOLS)}")
 st.sidebar.caption(f"analyst: {', '.join(ANALYST_TOOLS)}")
-st.sidebar.caption("writer: no tools -- drafts the answer from the reports gathered so far")
+st.sidebar.caption("writer: no tools -- drafts the answer from the reports")
 
 st.sidebar.subheader("Settings")
 force_no_finish = st.sidebar.toggle(
     "Supervisor can't declare done",
     key=f"{DEMO}_force_no_finish",
     help=(
-        "Removes 'finish' from the supervisor's routing options, so it keeps "
-        "handing off between workers with nothing to make it stop on its own -- "
-        "shows the step cap catching a loop between workers instead."
+        "Removes 'finish' from the supervisor's options, so it keeps handing off "
+        "until the step cap stops the loop."
     ),
 )
 
@@ -78,9 +76,8 @@ if clear_data_button(DEMO):
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Every worker turn reports back to the supervisor and only the supervisor -- "
-    "workers never talk to each other. Step 10 (Swarm) is the opposite choice: "
-    "no supervisor at all, and the workers hand the task to each other directly."
+    "Workers report only to the supervisor and never talk to each other. "
+    "Step 10 (Swarm) is the opposite: no supervisor, workers hand off directly."
 )
 
 graph_slot = st.container()
@@ -168,4 +165,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

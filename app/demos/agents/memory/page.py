@@ -50,10 +50,8 @@ provider_note()
 
 budget_template = sidebar_budget_controls(DEMO, settings.budget_defaults().to_budget())
 st.sidebar.caption(
-    "Two model calls spend a step each turn: the reply, and the extraction call that "
-    "decides what -- if anything -- is worth writing to long-term memory. Recall and "
-    "window trimming cost no steps; they're a local embedding search and a list "
-    "operation, not model calls."
+    "Each turn spends two steps: the reply, and an extraction call that picks facts "
+    "for long-term memory. Recall and trimming are free (no model call)."
 )
 
 st.sidebar.subheader("Thread")
@@ -72,8 +70,8 @@ _last = recent_runs(DEMO, limit=1)
 _last_thread = _last[0].get("thread_id") if _last else None
 if _last_thread and _last_thread != current_thread:
     st.sidebar.caption(
-        "A thread from an earlier session is still stored -- resuming proves the "
-        "checkpoint survived a restart or a fresh browser session, not just this rerun."
+        "A thread from an earlier session is still stored. Resume it to see the "
+        "checkpoint survive a restart or a new browser session."
     )
     if st.sidebar.button("Resume last thread", key=f"{DEMO}_resume_thread"):
         st.session_state[THREAD_KEY] = _last_thread
@@ -89,9 +87,8 @@ if clear_data_button(DEMO):
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Try the two-click test: send the first preset, click **New thread** in the "
-    "sidebar, then ask something that needs what you just said. The recall step "
-    "should find it even though the session that stated it is gone."
+    "Send the first preset, click **New thread** in the sidebar, then ask something "
+    "that needs what you said. Recall should still find it."
 )
 
 graph_slot = st.container()
@@ -216,4 +213,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`. Long-term memory lives in `{DEMO}_memory`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

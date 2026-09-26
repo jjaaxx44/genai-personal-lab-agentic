@@ -41,9 +41,8 @@ settings = get_settings()
 provider_note()
 budget_template = sidebar_budget_controls(DEMO, settings.budget_defaults().to_budget())
 st.sidebar.caption(
-    f"Handoff cap: {settings.swarm_max_handoffs}. Reaching it does not stop the run -- a "
-    "refused transfer comes back to the holding peer as a tool error it has to recover "
-    "from, the same as any other tool failure. The shared step cap is the hard stop."
+    f"Handoff cap: {settings.swarm_max_handoffs}. Hitting it doesn't stop the run: the "
+    "refused transfer comes back as a tool error. The step cap is the hard stop."
 )
 
 st.sidebar.subheader("Peers")
@@ -62,9 +61,8 @@ force_no_answer = st.sidebar.toggle(
     "Nobody may answer",
     key=f"{DEMO}_force_no_answer",
     help=(
-        "Every peer is told it may never reply with a final answer, only hand off -- "
-        "shows the task ping-ponging between peers until a budget cap catches it, "
-        "the swarm equivalent of Step 9's 'Supervisor can't declare done'."
+        "Tells every peer it may only hand off, never answer, so you can watch the "
+        "task ping-pong until a budget cap stops it."
     ),
 )
 
@@ -76,10 +74,9 @@ if clear_data_button(DEMO):
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Every peer reads the same shared conversation and decides for itself whether "
-    "to keep working, hand off, or answer -- inside the same call that does the "
-    "work. Step 9 (Supervisor-worker) is the opposite choice: one router decides "
-    "every hop, in a separate call, from a reports board built fresh each turn."
+    "Every peer reads one shared conversation and decides, in the same call that "
+    "does the work, whether to keep going, hand off, or answer. Supervisor-worker "
+    "is the opposite: one router picks every hop in a separate call."
 )
 
 graph_slot = st.container()
@@ -173,4 +170,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

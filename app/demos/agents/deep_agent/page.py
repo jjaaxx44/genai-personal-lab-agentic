@@ -69,8 +69,8 @@ demo_defaults = Budget(
 budget_template = sidebar_budget_controls(DEMO, demo_defaults)
 subagent_max_steps = sidebar_subagent_step_cap(DEMO, settings.subagent_max_steps)
 st.sidebar.caption(
-    f"Sub-agent launches: capped at {settings.deep_agent_max_subagents} per run. Each "
-    "launch that hits its own step cap above stops gracefully and reports back what it had."
+    f"Sub-agent launches: at most {settings.deep_agent_max_subagents} per run. A launch "
+    "that hits its step cap stops and reports what it had."
 )
 
 pending_run_ids = agent.run_ids_for_clear()
@@ -87,9 +87,8 @@ if f"{DEMO}_vfs_cleared" in st.session_state:
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Built with `deepagents` 0.7.15. Step 3 (Plan-and-Execute) builds the plan by hand; "
-    "Step 8 (Sub-agent delegation) builds the sub-agents by hand -- this page shows the "
-    "same two ingredients, plus a file system, as the library packages them."
+    "Built with `deepagents` 0.7.15: the plan (Step 3) and sub-agents (Step 8), plus "
+    "files, as the library packages them."
 )
 
 graph_slot = st.container()
@@ -171,9 +170,8 @@ with body_slot:
                 open_count = len(agent.open_todo_items(chosen.args.get("todos", [])))
                 if open_count:
                     st.caption(
-                        f"The run stopped with {open_count} item(s) still open -- "
-                        f"{result.stop_reason or result.status}. The list shows where it was "
-                        "left, not work still going on."
+                        f"Stopped with {open_count} item(s) open -- "
+                        f"{result.stop_reason or result.status}. This is where it was left."
                     )
             for item in chosen.args.get("todos", []):
                 status_text = item.get("status", "pending")
@@ -226,19 +224,14 @@ with body_slot:
             st.text(ANALYST_SYSTEM_PROMPT)
         with st.expander("The harness: tools each agent actually had"):
             st.caption(
-                "From the same lists this run's build used to construct each agent's "
-                "middleware -- not restated by hand. `execute` (the library's shell tool) "
-                "is never in any of them: no sandbox backend is configured, so "
-                "`deepagents` never registers it, and each `FilesystemMiddleware` below "
-                "is additionally built with an explicit tool list that omits it."
+                "The same lists used to build each agent. `execute` (the shell tool) is "
+                "never here: there's no sandbox backend, and each tool list also omits it."
             )
             for agent_name, tools in HARNESS_TOOLS.items():
                 st.markdown(f"**{agent_name}**: {', '.join(sorted(tools))}")
             st.caption(
-                "The library also auto-adds a general-purpose sub-agent unless one is "
-                "supplied under that name; this demo's own task-tool guard refuses any "
-                "subagent_type other than researcher/analyst before dispatch, so it is "
-                "registered but never actually run (verified LLM-free -- see the README)."
+                "The library also adds a general-purpose sub-agent. The task-tool guard "
+                "refuses anything but researcher/analyst, so it never runs (see the README)."
             )
 
         final_output(result)
@@ -257,4 +250,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`. Files stored under `data/vfs/{result.run_id}/`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)

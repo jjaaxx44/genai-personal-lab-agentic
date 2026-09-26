@@ -54,10 +54,9 @@ isolated = st.sidebar.toggle(
     value=True,
     key=f"{DEMO}_isolated",
     help=(
-        "On: the parent may hand a self-contained subtask to a sub-agent and gets "
-        "back only its final reply. Off: delegate_subagent isn't offered at all -- "
-        "the parent does the whole task itself in one shared context, so every "
-        "tool result stays in its own history for the rest of the run."
+        "On: the parent can hand a subtask to a sub-agent and gets back only its "
+        "reply. Off: no delegate_subagent -- the parent does everything in one "
+        "context, and every tool result stays in its history."
     ),
 )
 if isolated:
@@ -66,20 +65,19 @@ if isolated:
         value=False,
         key=f"{DEMO}_force_failure",
         help=(
-            "Clamps the sub-agent's own step cap to zero, so a delegated call "
-            "stops before its first LLM call -- shows the parent recovering from "
-            "a failed delegation instead of the run crashing."
+            "Sets the sub-agent's step cap to zero, so it stops before its first "
+            "LLM call -- shows the parent recovering instead of crashing."
         ),
     )
     subagent_max_steps = sidebar_subagent_step_cap(DEMO, settings.subagent_max_steps)
 else:
     force_failure = False
     subagent_max_steps = settings.subagent_max_steps
-    st.sidebar.caption("Hidden in shared-context mode -- there's no delegated call to fail.")
+    st.sidebar.caption("Hidden in shared-context mode -- nothing is delegated.")
 
 st.sidebar.caption(
-    f"Tools ({', '.join(TOOL_NAMES)}) are the same set the parent already has -- "
-    "delegating trades context, not capability."
+    f"Tools ({', '.join(TOOL_NAMES)}) are the same for parent and sub-agent -- "
+    "delegating saves context, not capability."
 )
 
 if clear_data_button(DEMO):
@@ -92,16 +90,13 @@ if clear_data_button(DEMO):
 
 demo_header(NAME, SENTENCE)
 st.caption(
-    "Each preset pairs a corpus fact with an independent SQL fact -- a natural "
-    "split for the parent to hand one half off. Run a preset with isolation on, "
-    "then flip the toggle and run it again to compare the token counts below."
+    "Each preset pairs a corpus fact with a SQL fact, so one half is easy to "
+    "hand off. Run with isolation on, then off, and compare the token counts."
 )
 st.caption(
-    "The parent and every sub-agent here share the exact same tools -- "
-    "delegating only keeps a piece of work out of the parent's own context, it "
-    "never hands the sub-agent a capability the parent lacked. Giving each "
-    "sub-agent its own dedicated tools, chosen by a router, is Step 9 "
-    "(Supervisor–worker), not this one."
+    "Parent and sub-agents share the same tools: delegating keeps work out of "
+    "the parent's context, it adds no new ability. Specialists with their own "
+    "tools, picked by a router, are Step 9 (Supervisor–worker)."
 )
 
 graph_slot = st.container()
@@ -189,4 +184,4 @@ def trace() -> None:
     st.caption(f"Stored as a record in `{DEMO}_runs`.")
 
 
-readme_and_trace_tabs(DEMO, README, trace)
+readme_and_trace_tabs(DEMO, README, trace, GRAPH)
